@@ -60,6 +60,8 @@ const onCreate = () => {
     email: '',
   });
 
+
+
   
   console.log(nextId.current); //4
   nextId.current +=1;
@@ -68,6 +70,11 @@ const onCreate = () => {
 
 }
 // 값이 reredering 되더라도 값을 계속해서 기억하고 있을 수 있도록 하기 위해 사용.
+
+const onRemove = id => {
+  setUsers(users.filter(user => user.id !== id));
+};
+
   return (
     <>
     <CreateUser 
@@ -75,7 +82,7 @@ const onCreate = () => {
       email={email} 
       onChange={onChange} 
       onCreate = {onCreate}/>
-     <UserList users={users}/>
+     <UserList users={users} onRemove={onRemove}/>
     </>
   );
 }

@@ -1,14 +1,21 @@
 import React from 'react';
 
-function User({user}){
+function User({user, onRemove}){
+    const {username, email, id} = user;
     return (
         <div>
-            <b>{user.username}</b><span>({user.email})</span>
+            <b>{username}</b><span>({email})</span>
+            <button onClick={() => onRemove(id)}>삭제</button>
+            {/* onClick={onRemove(id)}라고 쓰게 될 경우 
+                rendering시 함수를 호출해버려 아무것도 뜨지 않게 됨.
+                따라서, 함수를 호출해주는 것이 아니라 함수를 만들어 주기 위해
+                () => onremove ... 의 형태로 사용해야함.
+            */}
         </div>
     );
 }
 
- function UserList({users}) {
+ function UserList({users, onRemove}) {
    
     return(
     <div>
@@ -32,7 +39,11 @@ function User({user}){
         {
             users.map(
                 //user => (<User user={user} />) 이렇게 쓰면 에러가 나오는데 객체 내 key에 해당하는 요소가 필요하다는 error임.
-                user => (<User user={user} key={user.id}/>)
+                user => (
+                <User 
+                user={user} 
+                key={user.id} 
+                onRemove={onRemove}/>)
                 // 만약 키로 쓸 마땅한 요소가 없다면 (user,index) => (<User user={user} key={index}/>)를 쓰기
             )
         } 
