@@ -1,10 +1,18 @@
 import React from 'react';
 
-function User({user, onRemove}){
-    const {username, email, id} = user;
+function User({user, onRemove, onToggle}){
+    const {username, email, id, active} = user;
     return (
         <div>
-            <b>{username}</b><span>({email})</span>
+            <b style = {{
+                color: active ? 'green': 'black',
+                cursor: 'pointer',
+
+            }}
+            onClick={()=>onToggle(id)}
+            >{username}</b>
+            &nbsp;
+            <span>({email})</span>
             <button onClick={() => onRemove(id)}>삭제</button>
             {/* onClick={onRemove(id)}라고 쓰게 될 경우 
                 rendering시 함수를 호출해버려 아무것도 뜨지 않게 됨.
@@ -15,7 +23,7 @@ function User({user, onRemove}){
     );
 }
 
- function UserList({users, onRemove}) {
+ function UserList({users, onRemove, onToggle}) {
    
     return(
     <div>
@@ -43,7 +51,9 @@ function User({user, onRemove}){
                 <User 
                 user={user} 
                 key={user.id} 
-                onRemove={onRemove}/>)
+                onRemove={onRemove}
+                onToggle={onToggle}
+                />)
                 // 만약 키로 쓸 마땅한 요소가 없다면 (user,index) => (<User user={user} key={index}/>)를 쓰기
             )
         } 
