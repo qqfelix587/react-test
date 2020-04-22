@@ -1,4 +1,4 @@
-import React, {useRef,useState, useMemo} from 'react';
+import React, {useRef,useState, useMemo, useCallback} from 'react';
 import Hello from './Hello'
 import './App.css'
 import Wrapper from './Wrapper';
@@ -17,17 +17,19 @@ function App() {
     email: '',
   
   });
+
   const {username, email} = inputs;
-  const onChange = e =>{
+
+
+  const onChange = useCallback(e =>{
     const {name, value} = e.target;
     setInputs({
       ...inputs,
       [name]: value
     });
-  };
-  const [users, setUsers] = useState([
-    
+  }, [inputs]);
 
+  const [users, setUsers] = useState([
     {
         id: 1,
         username: 'velopert',
@@ -48,13 +50,12 @@ function App() {
         active: false,
 
     }
-
-
 ]);
 
 
 const nextId = useRef(4);
-const onCreate = () => {
+
+const onCreate = useCallback(() => {
   const user = {
     id: nextId.current,
     username,
@@ -68,33 +69,30 @@ const onCreate = () => {
     username : '',
     email: '',
   });
-
-
-
-  
   console.log(nextId.current); //4
   nextId.current +=1;
   // 다시 새로운 값을 가리키도록
-
-
-}
+},[username, email, users]);
 // 값이 reredering 되더라도 값을 계속해서 기억하고 있을 수 있도록 하기 위해 사용.
 
-const onRemove = id => {
+
+const onRemove = useCallback (id => {
   setUsers(users.filter(user => user.id !== id));
-};
-const onToggle = id => {
+},[users]);
+ 
+
+const onToggle = useCallback(id => {
   setUsers(users.map(
     user => user.id === id
     ? {...user, active: !user.active}
     : user
   ));
 
-};
+}, [users]);
 // const count = countActiveUsers(users);
 // 이렇게 사용하면 rerendering이 될 때마다 실행됨. -> useMemo 사용함(특정 값이 바뀔 때만 동작)
 const count = useMemo(() => countActiveUsers(users), [users]);
-//  deps 배열 안에 넣는 값이 바뀔 때만 연산 진행됨.
+//  deps 배열 안에 넣는 값이 바뀔 때만 연산 진행됨. / 성능 최적화시키기 위해 적용하는 것.
 
 
   return (
@@ -104,13 +102,10 @@ const count = useMemo(() => countActiveUsers(users), [users]);
       email={email} 
       onChange={onChange} 
       onCreate = {onCreate}/>
-     <UserList users={users} onRemove={onRemove} onToggle = {onToggle}/>
-  <div>활성 사용자 수 : {count}</div>
-    </>
+      <UserList users={users} onRemove={onRemove} onToggle = {onToggle}/>
+      <div>활성 사용자 수 : {count}</div>
+    </> 
   );
-
-
-
 }
 
 
