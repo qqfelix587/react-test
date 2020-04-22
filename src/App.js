@@ -1,4 +1,4 @@
-import React, {useRef,useState} from 'react';
+import React, {useRef,useState, useMemo} from 'react';
 import Hello from './Hello'
 import './App.css'
 import Wrapper from './Wrapper';
@@ -7,6 +7,10 @@ import InputSample from './InputSample';
 import UserList from './UserList';
 import CreateUser from './CreatUser';
 
+function countActiveUsers(users){
+  console.log('활성 사용자 수를 세는중...');
+  return users.filter(user => user.active).length;
+}
 function App() {
   const [inputs, setInputs] = useState({
     username: '',
@@ -87,6 +91,11 @@ const onToggle = id => {
   ));
 
 };
+// const count = countActiveUsers(users);
+// 이렇게 사용하면 rerendering이 될 때마다 실행됨. -> useMemo 사용함(특정 값이 바뀔 때만 동작)
+const count = useMemo(() => countActiveUsers(users), [users]);
+//  deps 배열 안에 넣는 값이 바뀔 때만 연산 진행됨.
+
 
   return (
     <>
@@ -96,6 +105,7 @@ const onToggle = id => {
       onChange={onChange} 
       onCreate = {onCreate}/>
      <UserList users={users} onRemove={onRemove} onToggle = {onToggle}/>
+  <div>활성 사용자 수 : {count}</div>
     </>
   );
 
