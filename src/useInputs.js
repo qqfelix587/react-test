@@ -14,7 +14,7 @@ function reducer(state, action){
                     return acc;
                 },{});
             
-                // 여기 return 다음에 다음줄에 Object하니까 error 나온다 항상 주의하자.
+                // 여기 return 다음에 다음줄에 Object하니까 error 나온다 항상 주의(return 바로 뒤에 값이 나와야 함.)하자.
                 // {}안에 넣으면 객체로 인식하기 때문에 error나오는 거다...휴
         default: 
             return state;
